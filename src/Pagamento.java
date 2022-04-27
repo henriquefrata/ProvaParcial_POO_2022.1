@@ -1,7 +1,7 @@
 public interface Pagamento {
     
-    public double CalcularPagamento() {
+    public double CalcularPagamento();
         
-    }
+    
 
 }
