@@ -48,11 +48,11 @@ public class Util {
                 c= pf;
                 JOptionPane.showMessageDialog(null,"Sua mesa foi cadastrada com sucesso");
             
-            }else{
+            } else {
 
                 JOptionPane.showMessageDialog(null,"O CPF inserido já está cadastrado");
         }
-            }else if (tipo.equals("j")){
+            } else if (tp.equals("j")){
                 
                 String cnpj = JOptionPane.showInputDialog( "Insira seu CNPJ:" );
                 valida = verificando(cnpj);
@@ -61,7 +61,7 @@ public class Util {
                     PessoaJuridica pj = new PessoaJuridica(nome,cnpj);
                     c= pj;
                     JOptionPane.showMessageDialog(null,"Sua mesa foi cadastrada com sucesso");
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null,"O CNPJ inserido já está cadastrado");
                 }
             }
@@ -72,12 +72,85 @@ public class Util {
            Reserva reserva = new Reserva(c,pag);
            reservas.add(reserva);
         }
-    
-    
-        
-
-
     }
+
+    public static void pesquisarReserva(){
+        String buscar = JOptionPane.showInputDialog(null, "Insira o CPF OU CNPJ para consulta: ");
+        int valida = verificando(buscar);
+
+        if(valida != -1){
+            if(valida < 6){
+            JOptionPane.showMessageDialog(null, "Reserva Encontrada!:) \n" +reservas.get(valida).getCliente().toString());
+            } else {
+                JOptionPane.showMessageDialog(null, "Achamos sua reserva, mas você ainda está na lista de espera! \nCliente: " +reservas.get(valida).getCliente().toString() + "\nPosição na fila: "+ (valida-5)); 
+            }
+        } else {
+           String novo =  JOptionPane.showInputDialog(null, "Não achamos sua reserva, gostaria de realizar uma reserva? [ S / N ]").toLowerCase();
+            if (novo.equals("s")){
+                reservarMesa();
+            }
+        }  
+    }
+
+    public static int verificando(String buscar){
+        int valida = -1;
+    
+            for (int i=0; i<reservas.size() ; i++){
+    
+                if (reservas.get(i).getCliente() instanceof PessoaFisica){
+                    PessoaFisica pf = (PessoaFisica) reservas.get(i).getCliente();
+                    if (pf.getCpf().equals(buscar)){  
+                        valida = i;                        
+                    }
+                }
+    
+                if (reservas.get(i).getCliente() instanceof PessoaJuridica){
+                    PessoaJuridica pj = (PessoaJuridica) reservas.get(i).getCliente();
+                    if (pj.getCnpj().equals(buscar)){                   
+                        valida = i;
+                    }
+                }
+            } 
+        return valida;    
+        }
+    
+    public static void imprimirListaEspera(){
+        if(reservas.size()>6){   
+            for ( int i=6; i<reservas.size(); i++){
+                JOptionPane.showMessageDialog(null, reservas.get(i) + "\nVocê está na "+(i-5) + "º da fila");               
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Nenhuma reserva na lista de espera!");
+            }    
+        }
+    public static void imprimirReservas(){   
+        if(reservas.size()>0){   
+            for ( int i =0; i<reservas.size() ; i++){
+                if(i<6){
+                    JOptionPane.showMessageDialog(null, reservas.get(i));  
+                 } else {
+                    return;
+                    }       
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Nenhuma reserva feita! :(");
+            }    
+        }
+    public static void cancelarReserva(){
+        String achar = JOptionPane.showInputDialog(null, "Insira o CPF OU CNPJ para cancelar a reserva: ");
+    
+        int valida = verificando(achar);
+        
+            if(valida != -1){
+                reservas.remove(valida);
+                JOptionPane.showMessageDialog(null, "Reserva cancelada, mas fique a vontade para agendar com nós novamente!");
+                
+            } else {
+             JOptionPane.showMessageDialog(null, "Reserva não encontrada!!");
+            }
+              
+            }
+
 
 
     
